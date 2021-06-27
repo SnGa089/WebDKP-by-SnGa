@@ -1,0 +1,891 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ 
+..\..\FrameXML\UI.xsd">
+<Script file="Fatality.lua"/>
+  <!-- ================================================
+       TEMPLATES 
+       =================================================-->
+   <!-- Defines an edit box template. This template is used for all the input boxes in the form.  -->
+  <EditBox name="WebDKPEditBoxTemplate" letters="80" virtual="true">
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture file="Interface\ChatFrame\UI-ChatInputBorder-Left">
+          <Size>
+            <AbsDimension x="75" y="32"></AbsDimension>
+          </Size>
+          <Anchors>
+            <Anchor point="LEFT">
+              <Offset>
+                <AbsDimension x="-10" y="0"></AbsDimension>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0" right="0.2" top="0" bottom="1.0"></TexCoords>
+        </Texture>
+        <Texture file="Interface\ChatFrame\UI-ChatInputBorder-Right">
+          <Size>
+            <AbsDimension x="75" y="32"></AbsDimension>
+          </Size>
+          <Anchors>
+            <Anchor point="RIGHT">
+              <Offset>
+                <AbsDimension x="10" y="0"></AbsDimension>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0.7" right="1.0" top="0" bottom="1.0"></TexCoords>
+        </Texture>
+      </Layer>
+    </Layers>
+    <FontString inherits="ChatFontNormal"></FontString>
+    <Scripts>
+      <OnLoad>
+        self:SetAutoFocus( false );
+      </OnLoad>
+      <OnEscapePressed>
+        self:ClearFocus(self);
+      </OnEscapePressed>
+      <OnEnterPressed>
+        self:ClearFocus(self);
+      </OnEnterPressed>
+    </Scripts>
+  </EditBox>
+  
+  <!-- Defines a button template for all the buttons in the player list. This is 
+  defined here so that these parameters don't need to be redefined for each button -->
+  <Button name = "NameEntryTemplate" text="entry" virtual="true" >
+    <Size>
+      <AbsDimension x="150" y="16" />
+    </Size>
+  </Button>
+
+  <!-- Defines a template for the log headers -->
+  <Button name="WebDKP_Fatality_TabTemplate" virtual="true">
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture name="$parentBackground">
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+            <Anchor point="BOTTOMRIGHT"/>
+          </Anchors>
+          <Color r="1" g="1" b="1" a="1"/>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnLoad>
+        getglobal(self:GetName(self) .. "Background"):SetVertexColor(0.5, 0.5, 0.5, 0.5);
+      </OnLoad>
+      <OnEnter>
+       getglobal(self:GetName(self) .. "Background"):SetVertexColor(0.5, 0.5, 0.5, 0.5);
+      </OnEnter>
+      <OnLeave>
+       getglobal(self:GetName(self) .. "Background"):SetVertexColor(0.5, 0.5, 0.5, 0.5);
+      </OnLeave>
+    </Scripts>
+  </Button>
+  <!-- Define a template for a log entry -->
+  <Frame name="FatalityLineTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="612" y="20"/>
+    </Size>
+    <Layers>
+      <Layer level="BACKGROUND"> 
+        <Texture name="$parentBackground">
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+            <Anchor point="BOTTOMRIGHT"/>
+          </Anchors>
+          <Color r="1" g="1" b="1" a="1"/>
+        </Texture>
+      </Layer>
+      <Layer level="ARTWORK">
+        <FontString name="$parentAwarded" inherits="ChatFontNormal" text="">
+          <Anchors>
+            <Anchor point="CENTER">
+              <Offset>
+                <AbsDimension x="-264" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <FontString name="$parentAmount" inherits="ChatFontNormal" text="">
+          <Anchors>
+            <Anchor point="CENTER">
+              <Offset>
+                <AbsDimension x="-113" y="0"/> <!--  posicion de eliminado por de las lineas  -->
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <FontString name="$parentReason" inherits="ChatFontNormal" text="">
+          <Anchors>
+            <Anchor point="CENTER">
+              <Offset>
+                <AbsDimension x="76" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <FontString name="$parentDate" inherits="ChatFontNormal" text="">
+          <Anchors>
+            <Anchor point="CENTER">
+              <Offset>
+                <AbsDimension x="270" y="0"/> <!-- POSICION DE LA HORA DE LA LINEA -->
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnLoad>
+      getglobal(self:GetName(self) .. "Background"):SetVertexColor(0, 0, 0, 0);
+      </OnLoad>
+      <OnMouseUp>
+      </OnMouseUp>
+      <OnEnter>
+      </OnEnter>
+      <OnLeave>
+      </OnLeave>
+      <OnMouseDown>
+        Penalizacion_Fatality(self);
+      </OnMouseDown>
+    </Scripts>
+  </Frame>
+  
+   <!-- Define a template for a log entry for who was awarded, right side-->
+  <Frame name="WebDKP_AwardedLineTemplate" virtual="true">
+    <Size>
+      <AbsDimension x="50" y="20"/>
+    </Size>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture name="$parentBackground">
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+            <Anchor point="BOTTOMRIGHT"/>
+          </Anchors>
+          <Color r="1" g="1" b="1" a="1"/>
+        </Texture>
+      </Layer>
+      <Layer level="ARTWORK">
+        <FontString name="$parentAwarded" inherits="ChatFontNormal" text="">
+          <Anchors>
+            <Anchor point="LEFT">
+              <Offset>
+                <AbsDimension x="5" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnLoad>
+        getglobal(self:GetName(self) .. "Background"):SetVertexColor(0, 0, 0, 0);
+      </OnLoad>
+      <OnEnter>
+      </OnEnter>
+      <OnLeave>
+      </OnLeave>
+      <OnMouseDown>
+      </OnMouseDown>
+    </Scripts>
+  </Frame>
+
+  
+
+  <!-- ================================================
+       MAIN FRAME
+       =================================================-->
+  <Frame name="WebDKP_FatalityFrame" toplevel="true" parent="UIParent" movable="true" hidden="true">
+    <!-- EVENT HANDLERS FOR THE MASTER FRAME -->
+    <Scripts>
+      <OnMouseDown>
+        self:StartMoving(self);
+      </OnMouseDown>
+      <OnMouseUp>
+        self:StopMovingOrSizing(self);
+      </OnMouseUp>
+      <OnLoad>
+        <!-- WebDKP_OnLoad(self); -->
+      </OnLoad>
+      <OnEvent>
+        <!-- WebDKP_OnEvent(self); -->
+      </OnEvent>
+    </Scripts>
+    <Size>
+      <AbsDimension x="665" y="570"/>
+    </Size>
+    <Anchors>
+      <Anchor point="LEFT"/>
+    </Anchors>
+    <Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <EdgeSize>
+        <AbsValue val="16"/>
+      </EdgeSize>
+      <TileSize>
+        <AbsValue val="16"/>
+      </TileSize>
+      <BackgroundInsets>
+        <AbsInset left="5" right="5" top="5" bottom="5"/>
+      </BackgroundInsets>
+    </Backdrop>
+
+    <!-- HEADER / ADDON TITLE-->
+    <Layers>
+      <Layer level="OVERLAY">
+        <!-- Log TITLE -->
+        <FontString name="Fatality_WebDKP_Header" inherits="GameFontNormalLarge" text="Registro de Muertes ( Fatality )">
+          <Anchors>
+            <Anchor point="TOPLEFT" >
+              <Offset>
+                <AbsDimension x="22" y="-22"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="ARTWORK">
+        <Texture name="$parentHeaderTexture" file="Interface\DialogFrame\UI-DialogBox-Header">
+          <Size>
+            <AbsDimension x="400" y="64"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset>
+                <AbsDimension x="0" y="20"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+        <FontString name="$parentTitle" inherits="GameFontNormal" text="WebDKP Fatality Log">
+          <Anchors>
+            <Anchor point="TOP" relativeTo="$parentHeaderTexture">
+              <Offset>
+                <AbsDimension x="0" y="-14"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+        <FontString name="$parentRecordingText" inherits="GameFontNormal">
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset>
+                <AbsDimension x="0" y="-505"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+     <!-- Adjust Characters-->
+      <Layer level="OVERLAY">
+        <FontString name="$parentFileDir" inherits="GameFontNormal" text="FileDir">
+          <Anchors>
+            <Anchor point="TOPLEFT" >
+              <Offset>
+                <AbsDimension x="13" y="-535"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <!-- FRAMES (contains all gui elements -->
+    <Frames>
+      <!-- DKP TABLE COLUMN NAMES -->
+      <Button name="$parentAwardedto" inherits="WebDKP_Fatality_TabTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="12" y="-45"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Size>
+          <AbsDimension x="85" y="24"/> <!-- posicion del titulo personaje -->
+        </Size>
+        <Scripts>
+          <OnClick>
+          </OnClick>
+        </Scripts>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="$parentString" inherits="GameFontNormal" text="AwardedtoString">
+              <Anchors>
+                <Anchor point="CENTER">
+                  <Offset>
+                    <AbsDimension x="-1" y="0"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Button>
+      <Button name="$parentAmount" inherits="WebDKP_Fatality_TabTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentAwardedto">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Size>
+          <AbsDimension x="155" y="24"/> <!-- posicion del boton de eliminado por -->
+        </Size>
+        <Scripts>
+          <OnClick>
+          </OnClick>
+        </Scripts>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="$parentString" inherits="GameFontNormal" text="AmountString">
+              <Anchors>
+                <Anchor point="CENTER">
+                  <Offset>
+                    <AbsDimension x="32" y="0"/> 
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Button>
+      <Button name="$parentReason" inherits="WebDKP_Fatality_TabTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentAmount">
+            <Offset>
+              <AbsDimension x="0" y="0"/> 
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Size>
+          <AbsDimension x="285" y="24"/> 
+        </Size>
+        <Scripts>
+          <OnClick>
+          </OnClick>
+        </Scripts>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="$parentString" inherits="GameFontNormal" text="ReasonString">
+              <Anchors>
+                <Anchor point="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="0"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Button>
+      <Button name="$parentDate" inherits="WebDKP_Fatality_TabTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentReason">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Size>
+          <AbsDimension x="95" y="24"/>
+        </Size>
+        <Scripts>
+          <OnClick>
+          </OnClick>
+        </Scripts>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="$parentString" inherits="GameFontNormal" text="DateString">
+              <Anchors>
+                <Anchor point="CENTER">
+                  <Offset>
+                    <AbsDimension x="0" y="0"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+              <Size>
+                <AbsDimension x="145" y="24"/>
+              </Size>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Button>
+
+      <!-- Log Table SCROLL FRAME -->
+      <ScrollFrame name="$parentScrollLogFrame" inherits="FauxScrollFrameTemplate" hidden="false">
+        <Size>
+          <AbsDimension x="613" y="460"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="12" y="-70"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnVerticalScroll>
+           FauxScrollFrame_OnVerticalScroll(self, offset, 20, WebDKP_Fatality_ScrollLogListToggle);
+          </OnVerticalScroll>
+          <OnShow>
+            WebDKP_Fatality_UpdateLogTable(self)
+          </OnShow>
+        </Scripts>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <Texture name="$parentBackground" setAllPoints="true">
+              <Color r=".2" g=".2" b=".2" a="0.5" />
+            </Texture>
+          </Layer>
+        </Layers>
+
+      </ScrollFrame>
+      <!-- Log Table LINE ENTRIES -->
+      <Frame name="$parentLine1" inherits="FatalityLineTemplate" id="1">
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="12" y="-70"/> 
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine2" inherits="FatalityLineTemplate" id="2">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine1"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine3" inherits="FatalityLineTemplate" id="3">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine2"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine4" inherits="FatalityLineTemplate" id="4">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine3"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine5" inherits="FatalityLineTemplate" id="5">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine4"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine6" inherits="FatalityLineTemplate" id="6">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine5"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine7" inherits="FatalityLineTemplate" id="7">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine6"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine8" inherits="FatalityLineTemplate" id="8">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine7"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine9" inherits="FatalityLineTemplate" id="9">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine8"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine10" inherits="FatalityLineTemplate" id="10">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine9"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine11" inherits="FatalityLineTemplate" id="11">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine10"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine12" inherits="FatalityLineTemplate" id="12">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine11"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine13" inherits="FatalityLineTemplate" id="13">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine12"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine14" inherits="FatalityLineTemplate" id="14">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine13"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine15" inherits="FatalityLineTemplate" id="15">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine14"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine16" inherits="FatalityLineTemplate" id="16">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine15"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine17" inherits="FatalityLineTemplate" id="17">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine16"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine18" inherits="FatalityLineTemplate" id="18">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine17"/>
+        </Anchors>
+      </Frame>
+      <Frame name="$parentLine19" inherits="FatalityLineTemplate" id="19">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine18"/>
+        </Anchors>
+      </Frame>
+      
+      <Frame name="$parentLine20" inherits="FatalityLineTemplate" id="20">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine19"/>
+        </Anchors>
+        </Frame>
+        
+       <Frame name="$parentLine21" inherits="FatalityLineTemplate" id="21">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine20"/>
+        </Anchors>  
+        </Frame>   
+          
+      <Frame name="$parentLine22" inherits="FatalityLineTemplate" id="22">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine21"/>
+        </Anchors>
+       </Frame>
+       
+      <Frame name="$parentLine23" inherits="FatalityLineTemplate" id="23">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentLine22"/>
+        </Anchors> 
+       </Frame> 
+      <!-- Close Button -->
+      <Button name="$parentCloseButton" hidden="false">
+        <Size>
+          <AbsDimension x="42" y="42"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-5" y="-5"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            HideUIPanel(self:GetParent(self));
+            WebDKP_Fatality_ToDiscount:Hide(self);
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Up"/>
+        <PushedTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Down"/>
+        <HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
+      </Button>
+      <Button name="$parentDelChar" inherits="OptionsButtonTemplate" text="DelChar">
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="217" y="-3"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Size>
+          <AbsDimension x="170" y="25"/>
+        </Size>
+        <Scripts>
+        <OnClick> 
+          if IsShiftKeyDown() then
+            WebDKP_Fatality_Deleteall:Show(self);
+          else
+            Clear_Fatality(false);
+          end
+        </OnClick>
+        </Scripts>
+      </Button>
+       <Button name="$parentUpdateChar" inherits="OptionsButtonTemplate" text="UpdateChar">
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="$parentDelChar">
+            <Offset>
+              <AbsDimension x="200" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Size>
+          <AbsDimension x="170" y="25"/>
+        </Size>
+        <Scripts>
+        <OnClick> Update_Fatality(); </OnClick>
+        </Scripts>
+      </Button>
+      <Button name="$parentSaveChar" inherits="OptionsButtonTemplate" text="SaveChar">
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="$parentUpdateChar">
+            <Offset>
+              <AbsDimension x="200" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Size>
+          <AbsDimension x="170" y="25"/>
+        </Size>
+        <Scripts>
+        <OnClick> ReloadUI(self); </OnClick>
+        </Scripts>
+      </Button>
+    </Frames>
+  </Frame>
+
+  <!-- ================================================
+       FATALITY CONFIRM FRAME
+       =================================================-->
+  <Frame name="WebDKP_Fatality_ToDiscount" toplevel="true" parent="UIParent" movable="true" hidden="true">
+    <!-- EVENT HANDLERS FOR THE MASTER FRAME -->
+    <Scripts>
+      <OnMouseDown>
+        self:StartMoving(self);
+      </OnMouseDown>
+      <OnMouseUp>
+        self:StopMovingOrSizing(self);
+      </OnMouseUp>
+    </Scripts>
+    <Size>
+      <AbsDimension x="600" y="125"/>
+    </Size>
+    <Anchors>
+      <Anchor point="LEFT"/>
+    </Anchors>
+    <Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+      <EdgeSize>
+        <AbsValue val="16"/>
+      </EdgeSize>
+      <TileSize>
+        <AbsValue val="16"/>
+      </TileSize>
+      <BackgroundInsets>
+        <AbsInset left="5" right="5" top="5" bottom="5"/>
+      </BackgroundInsets>
+    </Backdrop>
+
+    <!-- HEADER / ADDON TITLE-->
+    <Layers>
+      <Layer level="ARTWORK">
+        <FontString name="$parentTitle" inherits="GameFontNormal" text="[ Title ]">
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset>
+                <AbsDimension x="0" y="-14"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <!-- FRAMES (contains all gui elements -->
+    <Frames>
+      <EditBox name="$parentCost" inherits="WebDKPEditBoxTemplate" >
+        <Size>
+          <AbsDimension x="70" y="32"></AbsDimension>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="-55" y="-10" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="$parentString" inherits="GameFontNormal" text="CostString">
+              <Anchors>
+                <Anchor point="RIGHT" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="-80" y="0"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+            <FontString inherits="GameFontNormal" text="DKP">
+              <Anchors>
+                <Anchor point="LEFT" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="10" y="0"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetParent(self):GetName(self).."Cost"):SetAutoFocus( false );
+          </OnLoad>
+        </Scripts>
+      </EditBox>
+      <!-- mio -->
+      <EditBox name="$parentMult" inherits="WebDKPEditBoxTemplate" >
+        <Size>
+          <AbsDimension x="70" y="32"></AbsDimension>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="162" y="-10" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString name="$parentString" inherits="GameFontNormal" text="MultString">
+              <Anchors>
+                <Anchor point="RIGHT" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="-80" y="0"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+            getglobal(self:GetParent(self):GetName(self).."Mult"):SetAutoFocus( false );
+          </OnLoad>
+        </Scripts>
+      </EditBox>
+      <!-- fin mio -->
+      <Button name="$parentYes" inherits="OptionsButtonTemplate" text="Yes">
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativePoint="BOTTOM" relativeTo="$parentCost">
+            <Offset>
+              <AbsDimension x="50" y="-10"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Size>
+          <AbsDimension x="100" y="25"/>
+        </Size>
+        <Scripts>
+          <OnClick>
+            WebDKP_AwardDKP_FS(self,"Fatality");
+            PlaySound_Fixed("igMainMenuClose");
+            WebDKP_Fatality_ToDiscount:Hide(self);
+          </OnClick>
+        </Scripts>
+      </Button>
+      <Button name="$parentNo" inherits="OptionsButtonTemplate" text="No">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOM" relativeTo="$parentCost">
+            <Offset>
+              <AbsDimension x="60" y="-10"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Size>
+          <AbsDimension x="100" y="25"/>
+        </Size>
+        <Scripts>
+          <OnClick>
+            PlaySound_Fixed("igMainMenuClose");
+            WebDKP_Fatality_ToDiscount:Hide(self);
+          </OnClick>
+        </Scripts>
+      </Button>
+    </Frames>
+  </Frame>
+
+<!-- ================================================
+   VENTANA DE CONFIRMACION DE ELIMINACION TOTAL 
+   ================================================-->
+  <Frame name="WebDKP_Fatality_Deleteall" toplevel="true" parent="UIParent" movable="true" hidden="true">
+    <!-- EVENT HANDLERS FOR THE MASTER FRAME -->
+    <Scripts>
+      <OnMouseDown>
+        self:StartMoving(self);
+      </OnMouseDown>
+      <OnMouseUp>
+        self:StopMovingOrSizing(self);
+      </OnMouseUp>
+    </Scripts>
+    <Size>
+      <AbsDimension x="350" y="75"/>
+    </Size>
+    <Anchors>
+      <Anchor point="LEFT"/>
+    </Anchors>
+    <Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+      <EdgeSize>
+        <AbsValue val="16"/>
+      </EdgeSize>
+      <TileSize>
+        <AbsValue val="16"/>
+      </TileSize>
+      <BackgroundInsets>
+        <AbsInset left="5" right="5" top="5" bottom="5"/>
+      </BackgroundInsets>
+    </Backdrop>
+
+    <!-- HEADER / ADDON TITLE-->
+    <Layers>
+      <Layer level="ARTWORK">
+        <FontString name="$parentTitle" inherits="GameFontNormal" text="Title">
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset>
+                <AbsDimension x="0" y="-14"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <!-- FRAMES (contains all gui elements -->
+    <!-- fin mio -->
+  <Frames>
+    <Button name="$parentYes" inherits="OptionsButtonTemplate" text="Yes">
+      <Anchors>
+        <Anchor point="TOPRIGHT" relativePoint="BOTTOM" relativeTo="$parentTitle">
+          <Offset>
+            <AbsDimension x="-10" y="-10"/>
+          </Offset>
+        </Anchor>
+      </Anchors>
+      <Size>
+        <AbsDimension x="100" y="25"/>
+      </Size>
+      <Scripts>
+        <OnClick>
+          Clear_Fatality(true);
+          PlaySound_Fixed("igMainMenuClose");
+          WebDKP_Fatality_Deleteall:Hide(self);
+        </OnClick>
+      </Scripts>
+    </Button>
+    <Button name="$parentNo" inherits="OptionsButtonTemplate" text="No">
+      <Anchors>
+        <Anchor point="TOPRIGHT" relativePoint="BOTTOM" relativeTo="$parentTitle">
+          <Offset>
+            <AbsDimension x="110" y="-10"/>
+          </Offset>
+        </Anchor>
+      </Anchors>
+      <Size>
+        <AbsDimension x="100" y="25"/>
+      </Size>
+      <Scripts>
+        <OnClick>
+          PlaySound_Fixed("igMainMenuClose");
+          WebDKP_Fatality_Deleteall:Hide(self);
+        </OnClick>
+      </Scripts>
+    </Button>
+  </Frames>
+</Frame>
+</Ui>

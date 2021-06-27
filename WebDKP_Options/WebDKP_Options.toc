@@ -1,0 +1,21 @@
+## Interface: 40300
+## Title: WebDKP_Options
+## Author: SnGa
+## Version: 1.2
+## Notes: Extension del AddOn WebDKP, que permite guardar los ajustes y los datos de los registros de manera global entre personajes.
+## URL: http://www.webDKP.com, http://www.dkptracker.com
+## X-Category: Guild Raid
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: WebDKP_Options_SnGa 
+## SavedVariables: WebDKP_Equipament_SnGa, WebDKP_Sindra_SnGa, WebDKP_Fatality_SnGa, WebDKP_Casino_SnGa, WebDKP_Boss_SnGa
+## SavedVariables: WebDKP_Synch_Users, WebDKP_Ignored_Items, WebDKP_RaidInfo, WebDKP_CharRaidInfo
+## RequiredDeps: WebDKP
+
+WebDKP_SindraFrame.xml
+WebDKP_FatalityFrame.xml
+Sindra.lua
+Fatality.lua
+MoreFunctions.lua
+WebDKP_Options.lua
+Language.lua

@@ -1,0 +1,37 @@
+## Interface: 40300
+## Title: WebDKP
+## Author: Quartal, Xenosian, Agard, Zevious, Zedd, SnGa
+## Version: 4.7.1
+## Notes: Contiene un sistema de subasta de items de raids a traves de Puntos DKP que son otorgados y gestionados por el Usuario.
+## URL: http://www.webDKP.com, http://www.dkptracker.com
+## X-Category: Guild Raid
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: WebDKP_Log,WebDKP_DkpTable,WebDKP_Tables,WebDKP_Loot,WebDKP_Alts,WebDKP_WebOptions
+## SavedVariablesPerCharacter: WebDKP_TableID_PerChar
+## RequiredDeps: WebDKP_Options
+
+WebDKP_Frame.xml
+WebDKP_Bid_Frame.xml
+WebDKP_Award_Frame.xml
+WebDKP_Help_Frame.xml
+WebDKP_Options_Frame.xml
+WebDKP_TimedAward_Frame.xml
+WebDKP_Synch_Frame.xml
+WebDKP_LogFrame.xml
+WebDKP_RaidInfoFrame.xml
+WebDKP_CharRaidFrame.xml
+WebDKP.lua
+WhisperDKP.lua
+Utility.lua
+GroupFunctions.lua
+Announcments.lua
+Awards.lua
+AutoFill.lua
+Bidding.lua
+Help.lua
+Options.lua
+TimedAward.lua
+Synch.lua
+RaidAttendance.lua
+Standby.lua
