@@ -1,5 +1,5 @@
-WebDKP v4.7.1: By SnGa (20/06/21)
-WebDKP_Options:
+WebDKP v4.7.1: By SnGa (20/06/21).
+WebDKP_Options:.
 Se agrego una extensión como parte fundamental y necesaria para el correcto funcionamiento del WebDKP, la cual tendrá un fuerte impacto sobre él y se requiere loguear con todos los personajes de una cuenta antes de personalizar las opciones del AddOn.
 
 Configuración Global:
