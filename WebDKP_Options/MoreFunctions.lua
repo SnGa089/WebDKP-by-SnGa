@@ -767,10 +767,10 @@ function WebDKP_AssignDKP_Casino( player, points, stat )
 --- Realiza las tareas de asignacion y motivo de dkp.
 --- Al mismo tiempo, hace el seguimiento de intentos, victorias y derrotas del postor
 	local new_date = date("%Y-%m-%d %H:%M:%S");
+	local class = WebDKP_DkpTable[player]["class"];
 
 	if WebDKP_Options_SnGa["AllInOne"] == 1 then
 		local found = nil;
-		local class = WebDKP_DkpTable[player]["class"];
 		
 		if WebDKP_Log ~= nil and WebDKP_Casino_SnGa[player]["date"] ~= nil then
 			for k, v in pairs(WebDKP_Log) do
@@ -831,10 +831,10 @@ end
 function Recopilando_Datos_FS( self )
 --- 2) Funcion de Recuperacion de Datos
 --- Recupera los desde desde la ventana del registro para su posterior procesamiento
-	Setting_Variables_FS();
-	playerdate = UnColorClass(_G[self:GetName().."Awarded"]:GetText());
-	playerreason = _G[self:GetName().."Reason"]:GetText();
-	playerclock = _G[self:GetName().."Date"]:GetText();
+	local Unknown = WebDKP_Language_lua["Others"]["Unknown"][GLanguage];
+	playerdate   = UnColorClass(_G[self:GetName().."Awarded"]:GetText()) or Unknown;
+	playerreason = _G[self:GetName().."Reason"]:GetText() or Unknown;
+	playerclock  = _G[self:GetName().."Date"]:GetText() or Unknown;
 	return  playerdate, playerreason;
 end
 
@@ -1044,13 +1044,6 @@ function Shorten_FS( n )
 	else
 		return n
 	end
-end
-
-function Setting_Variables_FS()
---- Plus) Cargo las variables con su respectivo texto de acuerdo al idioma
-	playerdate 	 = WebDKP_Language_lua["Others"]["Unknown"][GLanguage];
-	playerreason = WebDKP_Language_lua["Others"]["Unknown"][GLanguage];
-	playerclock  = WebDKP_Language_lua["Others"]["Unknown"][GLanguage];
 end
 
 -----------------[  Raid Attendance  Functions  ]------------------
